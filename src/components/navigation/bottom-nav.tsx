@@ -70,7 +70,10 @@ export function BottomNav() {
       initial={{ y: 40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="fixed bottom-5 left-1/2 z-30 w-[92%] max-w-lg -translate-x-1/2 rounded-full border border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur-xl shadow-[0_22px_40px_-32px_rgba(15,118,110,0.65)]"
+      className="fixed left-1/2 z-30 w-[92%] max-w-lg -translate-x-1/2 rounded-full border border-white/10 bg-slate-900/80 px-4 py-3 backdrop-blur-xl shadow-[0_22px_40px_-32px_rgba(15,118,110,0.65)]"
+      style={{
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)",
+      }}
     >
       <div className="relative flex items-center justify-between gap-2 text-xs">
         {navItems.map((item) => {
@@ -91,7 +94,7 @@ export function BottomNav() {
             >
               <Link href={item.href}>
                 <span className="flex items-center justify-center gap-2">
-                  <Icon className="h-5 w-5" />
+                  <Icon className="h-4 w-4" />
                   <span className="hidden sm:inline">{item.label}</span>
                 </span>
               </Link>
@@ -110,7 +113,7 @@ export function BottomNav() {
             aria-expanded={profileOpen}
             aria-haspopup="true"
           >
-            <UserCircle2 className="h-5 w-5" />
+            <UserCircle2 className="h-4 w-4" />
           </Button>
           <AnimatePresence>
             {profileOpen ? (
@@ -140,7 +143,7 @@ export function BottomNav() {
                     className="w-full justify-center rounded-full text-xs font-semibold"
                     onClick={handleSignOut}
                   >
-                    <LogOut className="h-5 w-5" />
+                    <LogOut className="h-4 w-4" />
                     Log out
                   </Button>
                 </div>

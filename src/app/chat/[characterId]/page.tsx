@@ -195,7 +195,7 @@ export default function CharacterChatPage({
           className="px-3 text-slate-500 hover:bg-slate-400/10 hover:text-slate-400"
           aria-label="Go back"
         >
-          <ArrowLeft className="h-5 w-5" />
+          <ArrowLeft className="h-4 w-4" />
         </Button>
       }
       rightSlotBare
@@ -210,13 +210,13 @@ export default function CharacterChatPage({
             size="sm"
             onClick={handleDelete}
             disabled={isDeleting}
-            className="px-3 text-xs font-semibold text-rose-500 hover:bg-rose-500/15 hover:text-rose-400"
+            className="px-3 text-xs font-semibold text-rose-400 hover:bg-rose-400/15 hover:text-rose-300"
           >
             {isDeleting ? (
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               <>
-                <Trash2 className="h-5 w-5" />
+                <Trash2 className="h-4 w-4" />
               </>
             )}
           </Button>
@@ -225,7 +225,7 @@ export default function CharacterChatPage({
       className="flex flex-col gap-6"
     >
       <div className="flex flex-1 flex-col gap-4">
-        <div className="grow space-y-4 overflow-y-auto rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl">
+        <div className="grow space-y-4 overflow-y-auto rounded-3xl border border-white/10 bg-white/5 p-4 pb-28 backdrop-blur-xl">
           {messagesLoading ? (
             <MessageSkeleton />
           ) : (
@@ -252,26 +252,31 @@ export default function CharacterChatPage({
           <div ref={endRef} />
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          {error ? <p className="text-xs text-rose-300">{error}</p> : null}
-          <div className="flex gap-2">
-            <Input
-              value={input}
-              onChange={(event) => setInput(event.target.value)}
-              placeholder={`Message ${character.name}`}
-              disabled={isSending}
-            />
-            <Button
-              type="submit"
-              size="lg"
-              className="h-12 w-20 rounded-full"
-              disabled={isSending || !input.trim()}
-            >
-              {isSending ? <Loader2 className="h-5 w-5 animate-spin" /> : <Send className="h-5 w-5" />}
-            </Button>
-          </div>
-          <TypingIndicator active={isSending || !!streamingMessage} />
-        </form>
+        <div className="sticky bottom-[calc(env(safe-area-inset-bottom,0px)+4.75rem)] z-20 flex-shrink-0">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 rounded-[1.75rem] border border-white/10 p-4 shadow-[0_24px_60px_-40px_rgba(14,165,233,0.5)] backdrop-blur-xl"
+          >
+            {error ? <p className="text-xs text-rose-300">{error}</p> : null}
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder={`Message ${character.name}`}
+                disabled={isSending}
+              />
+              <Button
+                type="submit"
+                size="lg"
+                className="h-12 w-20 rounded-full"
+                disabled={isSending || !input.trim()}
+              >
+                {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+              </Button>
+            </div>
+            <TypingIndicator active={isSending || !!streamingMessage} />
+          </form>
+        </div>
       </div>
     </AppShell>
   );
