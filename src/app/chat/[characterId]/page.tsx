@@ -195,7 +195,7 @@ export default function CharacterChatPage({
           className="px-3 text-slate-500 hover:bg-slate-400/10 hover:text-slate-400"
           aria-label="Go back"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-5 w-5" />
         </Button>
       }
       rightSlotBare
@@ -213,10 +213,10 @@ export default function CharacterChatPage({
             className="px-3 text-xs font-semibold text-rose-500 hover:bg-rose-500/15 hover:text-rose-400"
           >
             {isDeleting ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
               <>
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="h-5 w-5" />
               </>
             )}
           </Button>
