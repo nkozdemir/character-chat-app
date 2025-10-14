@@ -32,11 +32,11 @@ export function AppShell({
         >
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h1 className="text-lg font-semibold text-white sm:text-xl">
+              <h1 className="text-lg font-semibold text-slate-400 sm:text-xl">
                 {title}
               </h1>
               {description ? (
-                <p className="text-sm text-slate-300/80">{description}</p>
+                <p className="text-sm text-slate-400/80">{description}</p>
               ) : null}
             </div>
             {rightSlot ? (
@@ -45,7 +45,7 @@ export function AppShell({
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.3 }}
                 className={cn(
-                  "rounded-full border bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wide text-sky-200",
+                  "rounded-full border bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wide text-sky-300",
                   accent,
                 )}
               >

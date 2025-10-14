@@ -88,19 +88,19 @@ export default function CharactersPage() {
                 size="lg"
               />
               <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-white">
+                <h3 className="text-lg font-semibold text-slate-400">
                   {character.name}
                 </h3>
-                <p className="text-xs uppercase tracking-wide text-slate-300/80">
+                <p className="text-xs uppercase tracking-wide text-slate-400/80">
                   {character.subtitle}
                 </p>
-                <p className="text-sm text-slate-300/90">
+                <p className="text-sm text-slate-400/90">
                   {character.systemPrompt}
                 </p>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-between">
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-wide text-slate-200">
+              <span className="rounded-full border border-slate/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-wide text-slate-400">
                 {character.tone}
               </span>
               <Button

@@ -62,10 +62,10 @@ export default function ChatListPage() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-base font-semibold text-white">
+                      <p className="text-base font-semibold text-slate-400">
                         {chat.characterName}
                       </p>
-                      <p className="text-xs uppercase tracking-wide text-slate-300/75">
+                      <p className="text-xs uppercase tracking-wide text-slate-400/75">
                         {chat.characterSubtitle}
                       </p>
                     </div>
@@ -75,7 +75,7 @@ export default function ChatListPage() {
                       </span>
                     ) : null}
                   </div>
-                  <p className="mt-3 line-clamp-2 text-sm text-slate-300/90">
+                  <p className="mt-3 line-clamp-2 text-sm text-slate-400/90">
                     {chat.lastMessage || "No messages yet. Tap to start talking."}
                   </p>
                 </div>
