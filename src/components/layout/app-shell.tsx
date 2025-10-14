@@ -64,7 +64,7 @@ export function AppShell({
                   rightSlotBare
                     ? undefined
                     : cn(
-                        "rounded-full border bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wide text-sky-300",
+                        "rounded-full border bg-white/5 px-3 py-1 text-xs font-medium uppercase tracking-wide text-sky-500",
                         accent,
                       )
                 }
