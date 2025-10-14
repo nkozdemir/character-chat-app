@@ -37,7 +37,15 @@ export default function ChatListPage() {
     <AppShell
       title="Your chats"
       description="Pick up where you left off with any character."
-      rightSlot={<Link href="/characters">New chat</Link>}
+      rightSlot={
+        <Link
+          href="/characters"
+          className="flex h-6 w-6 items-center justify-center"
+        >
+          <MessageCirclePlus className="h-4 w-4" />
+          <span className="sr-only">New chat</span>
+        </Link>
+      }
     >
       <section className="space-y-4">
         {chatsLoading ? (
@@ -98,7 +106,7 @@ function EmptyState() {
       transition={{ duration: 0.4 }}
       className="flex flex-col items-center justify-center gap-6 rounded-3xl border border-dashed border-white/20 bg-white/5 px-6 py-10 text-center text-slate-300"
     >
-      <MessageCirclePlus className="h-10 w-10 text-sky-300" />
+      <MessageCirclePlus className="h-4 w-4 text-sky-300" />
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-white">Start your first chat</h3>
         <p className="text-sm text-slate-400/85">
