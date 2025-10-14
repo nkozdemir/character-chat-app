@@ -101,7 +101,7 @@ function EmptyState() {
       <MessageCirclePlus className="h-10 w-10 text-sky-300" />
       <div className="space-y-2">
         <h3 className="text-lg font-semibold text-white">Start your first chat</h3>
-        <p className="text-sm text-slate-300/85">
+        <p className="text-sm text-slate-400/85">
           Pick a character to explore a unique conversational vibe. Your history syncs instantly once you send a message.
         </p>
       </div>

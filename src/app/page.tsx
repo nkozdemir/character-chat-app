@@ -2,6 +2,7 @@
 
 import { m } from "framer-motion";
 import { FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +20,11 @@ const features = [
   "Curated AI characters with distinct voices",
   "Smooth micro-interactions throughout",
 ];
+
+const PASSWORD_PATTERN =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+const PASSWORD_REQUIREMENTS =
+  "Password must be at least 8 characters and include uppercase, lowercase, number, and special character.";
 
 export default function Home() {
   const router = useRouter();
@@ -42,6 +48,11 @@ export default function Home() {
 
     if (!email || !password) {
       setFormError("Please provide both email and password.");
+      return;
+    }
+
+    if (isRegister && !PASSWORD_PATTERN.test(password)) {
+      setFormError(PASSWORD_REQUIREMENTS);
       return;
     }
 
@@ -132,9 +143,19 @@ export default function Home() {
                     autoComplete={isRegister ? "new-password" : "current-password"}
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    placeholder="Minimum 6 characters"
+                    placeholder={
+                      isRegister
+                        ? "Minimum 8 characters with uppercase, lowercase, number, special"
+                        : "Enter your password"
+                    }
                     disabled={loading || submitting}
+                    minLength={isRegister ? 8 : undefined}
                   />
+                  {isRegister ? (
+                    <p className="text-[11px] text-slate-400">
+                      {PASSWORD_REQUIREMENTS}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -171,6 +192,17 @@ export default function Home() {
                   {isRegister ? "Sign in instead" : "Create an account"}
                 </button>
               </p>
+              {!isRegister ? (
+                <p className="text-xs text-slate-400">
+                  Forgot your password?{" "}
+                  <Link
+                    href="/forgot-password"
+                    className="text-sky-200 underline-offset-4 transition hover:underline"
+                  >
+                    Reset it here
+                  </Link>
+                </p>
+              ) : null}
             </form>
           </CardContent>
         </Card>

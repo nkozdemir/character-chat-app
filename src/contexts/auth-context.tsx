@@ -7,6 +7,7 @@ import {
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
   type User,
 } from "firebase/auth";
 import {
@@ -24,6 +25,7 @@ type AuthContextValue = {
   loading: boolean;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   signUpWithEmail: (email: string, password: string) => Promise<void>;
+  requestPasswordReset: (email: string) => Promise<void>;
   signOutUser: () => Promise<void>;
 };
 
@@ -65,6 +67,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     await createUserWithEmailAndPassword(auth, email, password);
   }, []);
 
+  const requestPasswordReset = useCallback(async (email: string) => {
+    await sendPasswordResetEmail(auth, email);
+  }, []);
+
   const signOutHandler = useCallback(async () => {
     await signOut(auth);
   }, []);
@@ -75,9 +81,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       signInWithEmail,
       signUpWithEmail,
+      requestPasswordReset,
       signOutUser: signOutHandler,
     }),
-    [loading, signInWithEmail, signOutHandler, signUpWithEmail, user],
+    [
+      loading,
+      requestPasswordReset,
+      signInWithEmail,
+      signOutHandler,
+      signUpWithEmail,
+      user,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
