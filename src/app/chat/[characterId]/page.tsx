@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, m } from "framer-motion";
-import { Loader2, Send } from "lucide-react";
+import { ArrowLeft, Loader2, Send, Trash2 } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import { useAuth } from "@/contexts/auth-context";
 import {
   addAssistantMessage,
   addUserMessage,
+  deleteChat,
   ensureChatSession,
 } from "@/lib/chat-actions";
 import { getCharacter } from "@/lib/characters";
@@ -43,6 +44,32 @@ export default function CharacterChatPage({
     useState<ChatMessage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const handleBack = () => {
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/characters");
+    }
+  };
+  const handleDelete = async () => {
+    if (!user || !character) return;
+    const confirmed = window.confirm(
+      `Delete your chat with ${character.name}? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    setIsDeleting(true);
+    setError(null);
+    try {
+      await deleteChat(user.uid, character.id);
+      router.replace("/chat");
+    } catch (err) {
+      console.error("Failed to delete chat", err);
+      setError("Could not delete this chat. Please try again.");
+      setIsDeleting(false);
+    }
+  };
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -159,7 +186,42 @@ export default function CharacterChatPage({
     <AppShell
       title={character.name}
       description={character.subtitle}
-      rightSlot={<span>{character.avatarEmoji}</span>}
+      leftSlot={
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleBack}
+          className="px-3 text-slate-500 hover:bg-slate-400/10 hover:text-slate-400"
+          aria-label="Go back"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+      }
+      rightSlotBare
+      rightSlot={
+        <div className="flex items-center gap-3">
+          <span className="text-xl" aria-hidden>
+            {character.avatarEmoji}
+          </span>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleDelete}
+            disabled={isDeleting}
+            className="px-3 text-xs font-semibold text-rose-500 hover:bg-rose-500/15 hover:text-rose-400"
+          >
+            {isDeleting ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <>
+                <Trash2 className="h-3.5 w-3.5" />
+              </>
+            )}
+          </Button>
+        </div>
+      }
       className="flex flex-col gap-6"
     >
       <div className="flex flex-1 flex-col gap-4">

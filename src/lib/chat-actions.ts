@@ -1,8 +1,10 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
+  getDocs,
   serverTimestamp,
   setDoc,
   updateDoc,
@@ -96,4 +98,24 @@ export async function addAssistantMessage(
     lastMessage: content,
     updatedAt: serverTimestamp(),
   });
+}
+
+export async function deleteChat(userId: string, chatId: string) {
+  const messagesRef = collection(
+    db,
+    "users",
+    userId,
+    "chats",
+    chatId,
+    "messages",
+  );
+
+  const messagesSnapshot = await getDocs(messagesRef);
+  const deletions = messagesSnapshot.docs.map((messageDoc) =>
+    deleteDoc(messageDoc.ref),
+  );
+  await Promise.all(deletions);
+
+  const chatDocRef = doc(db, "users", userId, "chats", chatId);
+  await deleteDoc(chatDocRef);
 }

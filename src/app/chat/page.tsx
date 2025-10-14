@@ -62,7 +62,7 @@ export default function ChatListPage() {
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-3">
                     <div>
-                      <p className="text-base font-semibold text-slate-400">
+                      <p className="text-base font-semibold text-slate-500">
                         {chat.characterName}
                       </p>
                       <p className="text-xs uppercase tracking-wide text-slate-400/75">

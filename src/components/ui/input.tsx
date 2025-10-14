@@ -11,14 +11,16 @@ const Input = React.forwardRef<
     <input
       type={type}
       className={cn(
-        "flex h-12 w-full rounded-full border border-white/20 bg-white/95 px-5 text-sm text-slate-900 placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/80 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-50 transition",
-        className,
+        "flex h-12 w-full rounded-full border border-sky-500 bg-white/95 px-5 text-sm text-slate-900 placeholder:text-slate-500",
+        "focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 transition",
+        className
       )}
       ref={ref}
       {...props}
     />
   );
 });
+
 Input.displayName = "Input";
 
 export { Input };

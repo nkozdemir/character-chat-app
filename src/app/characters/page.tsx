@@ -88,7 +88,7 @@ export default function CharactersPage() {
                 size="lg"
               />
               <div className="space-y-1">
-                <h3 className="text-lg font-semibold text-slate-400">
+                <h3 className="text-lg font-semibold text-slate-500">
                   {character.name}
                 </h3>
                 <p className="text-xs uppercase tracking-wide text-slate-400/80">
