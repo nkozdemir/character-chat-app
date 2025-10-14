@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Character Chat
 
-## Getting Started
+A Character.AI–style chat experience showcasing mobile-first UI, playful animations, and realtime conversations. Built with Next.js, Firebase, Tailwind CSS, Framer Motion, and Groq’s LLM API.
 
-First, run the development server:
+- **Live Features**: Email/password authentication, curated persona roster, realtime message sync with Firebase, Groq-powered AI replies, and animated micro-interactions optimised for touch.
+- **Pages**: `/` login, `/chat` history, `/chat/[characterId]` conversation, `/characters` persona browser.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Tech Stack
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js 15 (App Router) + React 19
+- Tailwind CSS v4 + custom shadcn-inspired components
+- Firebase Authentication & Firestore Realtime Database
+- Framer Motion for transitions & micro-interactions
+- Groq LLM (default model: `llama-3.1-8b-instant`)
+- TypeScript
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Copy environment example and fill in your keys:
+   ```bash
+   cp .env.example .env.local
+   ```
+3. Provide Firebase configuration and a Groq API key (see below).
+4. Run the development server:
+   ```bash
+   npm run dev
+   ```
+5. Open http://localhost:3000 and sign in with your email to explore the experience.
 
-## Learn More
+### Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+| Key | Description |
+| --- | --- |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` | Firebase Web API key |
+| `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase Auth domain |
+| `NEXT_PUBLIC_FIREBASE_PROJECT_ID` | Firebase project ID |
+| `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` | Firebase storage bucket |
+| `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` | Firebase sender ID |
+| `NEXT_PUBLIC_FIREBASE_APP_ID` | Firebase app ID |
+| `GROQ_API_KEY` | Groq console API key |
+| `GROQ_MODEL` _(optional)_ | Override the default Groq model |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Firebase Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Enable Email/Password in Firebase Authentication and create a Firestore database in “production mode” with the default rules. The app stores chats at `users/{userId}/chats/{characterId}` with a `messages` subcollection per chat.
 
-## Deploy on Vercel
+### Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Create a Vercel project, connect the repository, and add the environment variables above in the Vercel dashboard.
+- Set the build command to `npm run build` and the output directory to `.next`.
+- Provide the same Firebase and Groq secrets for production.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the development server |
+| `npm run build` | Create an optimized production build |
+| `npm start` | Run the production server |
+| `npm run lint` | Lint the project with ESLint |
+
+### Notes
+
+- LLM requests stream token-by-token from the Groq Chat Completions API for a responsive typing effect.
+- UI components follow a shadcn-inspired approach with Tailwind + class variance authority to keep styling consistent and themeable.
+- The chat surface is optimised for mobile but scales gracefully to tablet/desktop breakpoints.

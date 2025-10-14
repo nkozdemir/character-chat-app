@@ -1,103 +1,205 @@
-import Image from "next/image";
+"use client";
+
+import { m } from "framer-motion";
+import { FormEvent, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/auth-context";
+
+const features = [
+  "Email-based accounts that sync instantly",
+  "Realtime Groq-powered conversations",
+  "Curated AI characters with distinct voices",
+  "Smooth micro-interactions throughout",
+];
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const router = useRouter();
+  const { user, loading, signInWithEmail, signUpWithEmail } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isRegister, setIsRegister] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+  useEffect(() => {
+    if (!loading && user) {
+      router.replace("/chat");
+    }
+  }, [loading, router, user]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (loading || submitting) return;
+    setFormError(null);
+
+    if (!email || !password) {
+      setFormError("Please provide both email and password.");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      if (isRegister) {
+        await signUpWithEmail(email.trim(), password);
+      } else {
+        await signInWithEmail(email.trim(), password);
+      }
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message.replace("Firebase: ", "")
+          : "Unable to complete the request.";
+      setFormError(message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 py-12 text-white sm:px-6">
+      <GradientBackground />
+
+      <m.div
+        initial={{ opacity: 0, y: 28 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-lg"
+      >
+        <Card className="border-white/10 bg-slate-900/75 p-8 text-center shadow-[0_30px_60px_-35px_rgba(14,165,233,0.45)] backdrop-blur-2xl">
+          <CardContent className="space-y-8">
+            <div className="space-y-3">
+              <Badge>Character.AI inspired</Badge>
+              <CardTitle className="text-3xl font-semibold leading-tight sm:text-4xl">
+                Chat with soulful AI companions
+              </CardTitle>
+              <CardDescription className="text-base text-slate-300">
+                Pick a persona, trade thoughts, and enjoy an expressive messaging
+                experience built for mobile delight.
+              </CardDescription>
+            </div>
+
+            <div className="rounded-3xl border border-white/10 bg-white/5 p-4 text-left text-sm text-slate-200">
+              <p className="text-xs uppercase tracking-wide text-sky-200/90">
+                Inside the experience
+              </p>
+              <ul className="mt-3 space-y-2">
+                {features.map((item) => (
+                  <li key={item} className="flex items-center gap-2 text-sm">
+                    <span className="inline-flex h-2 w-2 rounded-full bg-sky-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 text-left">
+              <div className="space-y-3">
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="email"
+                    className="text-xs font-medium uppercase tracking-wide text-slate-200"
+                  >
+                    Email
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    disabled={loading || submitting}
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="password"
+                    className="text-xs font-medium uppercase tracking-wide text-slate-200"
+                  >
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    autoComplete={isRegister ? "new-password" : "current-password"}
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    placeholder="Minimum 6 characters"
+                    disabled={loading || submitting}
+                  />
+                </div>
+              </div>
+
+              {formError ? (
+                <p className="text-xs font-medium text-rose-300">{formError}</p>
+              ) : null}
+
+              <Button
+                type="submit"
+                size="lg"
+                variant="primary"
+                disabled={loading || submitting}
+                className="w-full rounded-full text-base"
+              >
+                {submitting
+                  ? "Please wait…"
+                  : isRegister
+                    ? "Create account"
+                    : "Sign in"}
+              </Button>
+
+              <p className="text-xs text-slate-400">
+                {isRegister
+                  ? "Already have an account?"
+                  : "First time here?"}{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsRegister((state) => !state);
+                    setFormError(null);
+                  }}
+                  className="text-sky-200 underline-offset-4 transition hover:underline"
+                >
+                  {isRegister ? "Sign in instead" : "Create an account"}
+                </button>
+              </p>
+            </form>
+          </CardContent>
+        </Card>
+      </m.div>
     </div>
+  );
+}
+
+function GradientBackground() {
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
+    >
+      <div className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-sky-500/30 blur-3xl" />
+      <div className="absolute bottom-0 left-0 h-[320px] w-[320px] rounded-full bg-fuchsia-500/20 blur-3xl" />
+      <m.div
+        className="absolute right-0 top-24 h-[260px] w-[260px] rounded-full bg-blue-500/20 blur-3xl"
+        animate={{ y: [0, 20, -10, 0], rotate: [0, 6, -4, 0] }}
+        transition={{ repeat: Infinity, duration: 14, ease: "easeInOut" }}
+      />
+    </div>
+  );
+}
+
+function Badge({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-flex items-center rounded-full border border-sky-400/30 bg-sky-400/10 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-sky-100">
+      {children}
+    </span>
   );
 }
