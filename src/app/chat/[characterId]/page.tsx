@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   use as usePromise,
+  type ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, m } from "framer-motion";
@@ -209,6 +210,22 @@ export default function CharacterChatPage({
                   streaming
                 />
               ) : null}
+              {!streamingMessage && isSending ? (
+                <AssistantStatusBubble
+                  key="typing-indicator"
+                  characterEmoji={character.avatarEmoji}
+                >
+                  <TypingIndicator />
+                </AssistantStatusBubble>
+              ) : null}
+              {error ? (
+                <AssistantStatusBubble
+                  key="error"
+                  characterEmoji={character.avatarEmoji}
+                  tone="error"
+                  message={error}
+                />
+              ) : null}
             </AnimatePresence>
           )}
           <div ref={endRef} />
@@ -219,7 +236,6 @@ export default function CharacterChatPage({
             onSubmit={handleSubmit}
             className="space-y-3 rounded-[1.75rem] border border-white/10 p-4 shadow-[0_24px_60px_-40px_rgba(14,165,233,0.5)] backdrop-blur-xl"
           >
-            {error ? <p className="text-xs text-rose-300">{error}</p> : null}
             <div className="flex gap-2">
               <Input
                 value={input}
@@ -236,7 +252,6 @@ export default function CharacterChatPage({
                 {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </Button>
             </div>
-            <TypingIndicator active={isSending || !!streamingMessage} />
           </form>
         </div>
       </div>
@@ -285,10 +300,51 @@ function MessageBubble({
   );
 }
 
-function TypingIndicator({ active }: { active: boolean }) {
-  if (!active) return null;
+function AssistantStatusBubble({
+  characterEmoji,
+  tone = "default",
+  message,
+  children,
+}: {
+  characterEmoji: string;
+  tone?: "default" | "error";
+  message?: string;
+  children?: ReactNode;
+}) {
+  const bubbleClasses =
+    tone === "error"
+      ? "rounded-bl-md border border-rose-200 bg-rose-100/90 text-rose-900"
+      : "rounded-bl-md border border-white/20 bg-white/80 text-slate-900 backdrop-blur-md";
+  const content = message ? (
+    <p className="whitespace-pre-wrap">{message}</p>
+  ) : (
+    children
+  );
+
   return (
-    <div className="flex items-center gap-2 text-xs text-slate-300">
+    <m.div
+      layout
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 6 }}
+      transition={{ duration: 0.25 }}
+      className="flex w-full gap-3"
+    >
+      <span className="mt-1 text-xl" aria-hidden>
+        {characterEmoji}
+      </span>
+      <div
+        className={`max-w-[78%] rounded-3xl px-4 py-3 text-sm leading-relaxed shadow-lg ${bubbleClasses}`}
+      >
+        {content}
+      </div>
+    </m.div>
+  );
+}
+
+function TypingIndicator() {
+  return (
+    <div className="flex items-center gap-2 text-xs text-slate-500">
       <span className="inline-flex h-2 w-2 animate-ping rounded-full bg-sky-400" />
       AI is composing a response…
     </div>
