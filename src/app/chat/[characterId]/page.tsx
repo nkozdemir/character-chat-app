@@ -9,7 +9,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, m } from "framer-motion";
-import { ArrowLeft, Loader2, Send, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, Send } from "lucide-react";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +18,6 @@ import { useAuth } from "@/contexts/auth-context";
 import {
   addAssistantMessage,
   addUserMessage,
-  deleteChat,
   ensureChatSession,
 } from "@/lib/chat-actions";
 import { getCharacter } from "@/lib/characters";
@@ -44,30 +43,11 @@ export default function CharacterChatPage({
     useState<ChatMessage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const endRef = useRef<HTMLDivElement | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
   const handleBack = () => {
     if (window.history.length > 1) {
       router.back();
     } else {
       router.push("/characters");
-    }
-  };
-  const handleDelete = async () => {
-    if (!user || !character) return;
-    const confirmed = window.confirm(
-      `Delete your chat with ${character.name}? This cannot be undone.`,
-    );
-    if (!confirmed) return;
-
-    setIsDeleting(true);
-    setError(null);
-    try {
-      await deleteChat(user.uid, character.id);
-      router.replace("/chat");
-    } catch (err) {
-      console.error("Failed to delete chat", err);
-      setError("Could not delete this chat. Please try again.");
-      setIsDeleting(false);
     }
   };
 
@@ -200,27 +180,9 @@ export default function CharacterChatPage({
       }
       rightSlotBare
       rightSlot={
-        <div className="flex items-center gap-3">
-          <span className="text-xl" aria-hidden>
-            {character.avatarEmoji}
-          </span>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={handleDelete}
-            disabled={isDeleting}
-            className="px-3 text-xs font-semibold text-rose-400 hover:bg-rose-400/15 hover:text-rose-300"
-          >
-            {isDeleting ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <>
-                <Trash2 className="h-4 w-4" />
-              </>
-            )}
-          </Button>
-        </div>
+        <span className="text-xl" aria-hidden>
+          {character.avatarEmoji}
+        </span>
       }
       className="flex flex-col gap-6"
     >
